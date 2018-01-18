@@ -73,9 +73,9 @@ class BJ_YH():
 if __name__ == '__main__':
     dmtuser='输入打码兔用户名'
     dmtpassword='请输入打码兔密码'
-    dmt = DamatuApi(dmtuser, dmtpassword)
-    print(dmt.getBalance())
     phone='北京摇号平台手机号'
     password='北京摇号平台密码'
+    dmt = DamatuApi(dmtuser, dmtpassword)
+    print('当前剩余积分：{}'.format(dmt.getBalance()))
     yh=BJ_YH(phone,password)
     print(yh.Resolv_html())
