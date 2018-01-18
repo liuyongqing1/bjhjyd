@@ -23,8 +23,8 @@ class BJ_YH():
 
     def LOGIN(self):
         self.SAVE_FILE()
-        vcode=dmt.decode('code.png', 101)
-        # print(vcode)
+        # vcode=input('打开 code.png 输入图片中的验证码') #如果需要手动输入验证码，需要取消注释。
+        vcode=dmt.decode('code.png', 101) #如果需要手动输入验证码，需要注释本行
         data={
             'userType':0,
             'ranStr':None,
@@ -44,10 +44,9 @@ class BJ_YH():
         resurl=result.url
         code=re.compile(r'.*?%E9%AA%8C%E8%AF%81%E7%A0%81%E9%94%99%E8%AF%AF')
         codestatus=re.match(code,resurl)
-        # print(resurl)
         if codestatus:
             print('错误的验证码,已向平台报告，不扣积分')
-            dmt.reportError('894657096')
+            dmt.reportError('894657096')                #如果需要手动输入验证码，需要注释。
             exit(2)
         return result.text
 
@@ -71,11 +70,11 @@ class BJ_YH():
 
 
 if __name__ == '__main__':
-    dmtuser='输入打码兔用户名'
-    dmtpassword='请输入打码兔密码'
+    dmtuser='输入打码兔用户名'      #如果需要手动输入验证码，需要注释本行
+    dmtpassword='请输入打码兔密码'  #如果需要手动输入验证码，需要注释本行
     phone='北京摇号平台手机号'
     password='北京摇号平台密码'
-    dmt = DamatuApi(dmtuser, dmtpassword)
-    print('当前剩余积分：{}'.format(dmt.getBalance()))
+    dmt = DamatuApi(dmtuser, dmtpassword)  #如果需要手动输入验证码，需要注释本行
+    print('当前剩余积分：{}'.format(dmt.getBalance())) #如果需要手动输入验证码，需要注释本行
     yh=BJ_YH(phone,password)
     print(yh.Resolv_html())
