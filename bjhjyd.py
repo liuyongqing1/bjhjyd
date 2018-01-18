@@ -1,9 +1,9 @@
 #-*- coding:utf8 -*-
 # import json
 
-import requests,pytesseract,re
+import requests,re
 from pyquery import PyQuery as pq
-from bjyaohao.damatuWeb import *
+from damatuWeb import *
 
 class BJ_YH():
     def __init__(self,Phone_Num,Password):
