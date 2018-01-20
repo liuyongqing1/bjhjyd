@@ -4,6 +4,7 @@
 import requests,re
 from pyquery import PyQuery as pq
 from damatuWeb import *
+from urllib.parse import quote,unquote
 
 class BJ_YH():
     def __init__(self,Phone_Num,Password):
@@ -14,6 +15,9 @@ class BJ_YH():
                'Referer':'https://www.bjhjyd.gov.cn/'}
         self.login_url='https://apply.bjhjyd.gov.cn/apply/user/person/login.html'
 
+    def __str__(self):
+        return  self.Resolv_html()
+
     def SAVE_FILE(self):
         Url_File='https://apply.bjhjyd.gov.cn/apply/validCodeImage.html?ee=1'
         with open('code.png','wb') as f:
@@ -23,8 +27,9 @@ class BJ_YH():
 
     def LOGIN(self):
         self.SAVE_FILE()
-        # vcode=input('打开 code.png 输入图片中的验证码') #如果需要手动输入验证码，需要取消注释。
-        vcode=dmt.decode('code.png', 101) #如果需要手动输入验证码，需要注释本行
+        vcode=input('打开 code.png 输入图片中的验证码: ') #如果需要手动输入验证码，需要取消注释。
+        # vcode=dmt.decode('code.png', 101) #如果需要手动输入验证码，需要注释本行
+        print(vcode)
         data={
             'userType':0,
             'ranStr':None,
@@ -42,13 +47,18 @@ class BJ_YH():
         result=self.r.post(self.login_url,data=data)
         result.encoding = 'utf-8'
         resurl=result.url
-        code=re.compile(r'.*?%E9%AA%8C%E8%AF%81%E7%A0%81%E9%94%99%E8%AF%AF')
-        codestatus=re.match(code,resurl)
-        if codestatus:
+        code=re.compile(r'message=.*?$')
+        codestatus=re.findall(code,resurl)[0]
+        codestatus=unquote(codestatus)
+        if codestatus == 'message=验证码错误':
             print('错误的验证码,已向平台报告，不扣积分')
             dmt.reportError('894657096')                #如果需要手动输入验证码，需要注释。
+            self.LOGIN()
+        elif codestatus == 'message=建议您使用IE8及以上版本的浏览器，其他浏览器对小客车系统兼容性不完善！':
+            return result.text
+        else:
+            print(codestatus)
             exit(2)
-        return result.text
 
     def Resolv_html(self):
         RESULT=[]
@@ -70,11 +80,11 @@ class BJ_YH():
 
 
 if __name__ == '__main__':
-    dmtuser='输入打码兔用户名'      #如果需要手动输入验证码，需要注释本行
-    dmtpassword='请输入打码兔密码'  #如果需要手动输入验证码，需要注释本行
-    phone='北京摇号平台手机号'
-    password='北京摇号平台密码'
+    dmtuser='打码兔平台用户名'      #如果需要手动输入验证码，需要注释本行
+    dmtpassword='打码兔平台密码'  #如果需要手动输入验证码，需要注释本行
+    phone='摇号平台用户名'
+    password='摇号平台密码'
     dmt = DamatuApi(dmtuser, dmtpassword)  #如果需要手动输入验证码，需要注释本行
     print('当前剩余积分：{}'.format(dmt.getBalance())) #如果需要手动输入验证码，需要注释本行
     yh=BJ_YH(phone,password)
-    print(yh.Resolv_html())
+    print(yh)
