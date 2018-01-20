@@ -25,3 +25,5 @@ password='北京摇号平台密码'
 ```
 python3 bjhjyd.py
 ```
+结果
+![结果](bjhjyd/result.png)
